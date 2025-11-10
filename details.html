@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <link rel="stylesheet" href="details.css">
+</head>
+<body>
+    <div class="deep-insights-container">
+        <button id="initiateDeepDiveButton" class="large-icon-button" title="Create Deep Insights">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </button>
+        <div id="insights-result">
+            <p id="status-message"></p>
+            <div id="insights-container" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h2>Insights</h2>
+                    <button class="share-button" data-content-type="insights">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </button>
+                </div>
+                <ul id="insights-list"></ul>
+            </div>
+            <div id="recommendations-container" class="output-section" style="display: none;">
+                <div class="output-header">
+                    <h2>Recommendations and Next Actions</h2>
+                    <button class="share-button" data-content-type="recommendations">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    </button>
+                </div>
+                <ul id="recommendations-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="share-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3>Generate Communication</h3>
+            <div class="modal-buttons">
+                <button class="modal-button" data-format="email">Email</button>
+                <button class="modal-button" data-format="slack">Slack</button>
+                <button class="modal-button" data-format="chat">Chat</button>
+            </div>
+            <textarea id="communication-content" rows="10"></textarea>
+            <button id="copy-button">Copy to Clipboard</button>
+            <span id="copy-confirmation" style="display: none; margin-left: 10px;">Copied!</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('sessionId');
+            const button = document.getElementById('initiateDeepDiveButton');
+            const statusMessage = document.getElementById('status-message');
+            
+            const insightsContainer = document.getElementById('insights-container');
+            const insightsList = document.getElementById('insights-list');
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            const recommendationsList = document.getElementById('recommendations-list');
+
+            const modal = document.getElementById('share-modal');
+            const closeButton = document.querySelector('.close-button');
+            const modalButtons = document.querySelectorAll('.modal-button');
+            const communicationContent = document.getElementById('communication-content');
+            const copyButton = document.getElementById('copy-button');
+            const copyConfirmation = document.getElementById('copy-confirmation');
+
+            let currentContent = [];
+
+            if (!sessionId) {
+                statusMessage.textContent = "Error: No session ID found.";
+                button.disabled = true;
+                return;
+            }
+
+            button.addEventListener('click', async () => {
+                // Clear previous results
+                insightsList.innerHTML = '';
+                recommendationsList.innerHTML = '';
+                insightsContainer.style.display = 'none';
+                recommendationsContainer.style.display = 'none';
+                statusMessage.textContent = 'Generating insights...';
+                button.disabled = true;
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/deep-insights', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ session_id: sessionId }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    statusMessage.textContent = ''; // Clear loading message
+
+                    if (data.error) {
+                        statusMessage.textContent = `Error: ${data.error}`;
+                    } else {
+                        // Populate Insights
+                        if (data.insights && data.insights.length > 0) {
+                            data.insights.forEach(text => {
+                                const li = document.createElement('li');
+                                li.textContent = text;
+                                insightsList.appendChild(li);
+                            });
+                            insightsContainer.style.display = 'block';
+                        }
+
+                        // Populate Recommendations
+                        if (data.recommendations && data.recommendations.length > 0) {
+                            data.recommendations.forEach(text => {
+                                const li = document.createElement('li');
+                                li.textContent = text;
+                                recommendationsList.appendChild(li);
+                            });
+                            recommendationsContainer.style.display = 'block';
+                        }
+                    }
+
+                } catch (error) {
+                    statusMessage.textContent = `Error: ${error.message}`;
+                } finally {
+                    button.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('.share-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const contentType = e.currentTarget.dataset.contentType;
+                    if (contentType === 'insights') {
+                        currentContent = Array.from(insightsList.querySelectorAll('li')).map(li => li.textContent);
+                    } else {
+                        currentContent = Array.from(recommendationsList.querySelectorAll('li')).map(li => li.textContent);
+                    }
+                    modal.classList.add('show');
+                });
+            });
+
+            closeButton.addEventListener('click', () => {
+                modal.classList.remove('show');
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target == modal) {
+                    modal.classList.remove('show');
+                }
+            });
+
+            modalButtons.forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const format = e.currentTarget.dataset.format;
+                    communicationContent.value = `Generating ${format} content...`;
+
+                    try {
+                        const response = await fetch('http://127.0.0.1:8000/generate-communication', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ content: currentContent, format: format }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        communicationContent.value = data.message;
+
+                    } catch (error) {
+                        communicationContent.value = `Error: ${error.message}`;
+                    }
+                });
+            });
+
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(communicationContent.value).then(() => {
+                    copyConfirmation.style.display = 'inline';
+                    setTimeout(() => {
+                        copyConfirmation.style.display = 'none';
+                    }, 2000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

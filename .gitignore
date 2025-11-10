@@ -1,0 +1,20 @@
+# Python
+.Python
+__pycache__/
+*.pyc
+*.orig
+*.swp
+*~
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+
+# Service Account Keys
+backend/sa/

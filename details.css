@@ -1,0 +1,186 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+}
+
+.deep-insights-container {
+    text-align: center;
+    padding: 40px;
+}
+
+/* Styling for the new large icon button */
+.large-icon-button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 50%;
+    color: #3c4043;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px; /* Larger size */
+    width: 70px;  /* Larger size */
+    margin: 20px auto; /* Centered with some margin */
+    padding: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s, background-color 0.3s, border-color 0.3s;
+}
+
+.large-icon-button:hover {
+    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+    background-color: #ebebeb;
+    border-color: #dadce0;
+    color: #202124;
+}
+
+.large-icon-button svg {
+    width: 32px; /* Adjust icon size for larger button */
+    height: 32px;
+    stroke: #3c4043;
+}
+
+.output-section {
+    margin-top: 30px;
+    text-align: left;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.output-section h2 {
+    margin-top: 0;
+    font-size: 20px;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.share-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.share-button svg {
+    width: 20px;
+    height: 20px;
+    stroke: #666;
+    transition: stroke 0.3s ease, filter 0.3s ease;
+}
+
+.share-button:hover svg {
+    stroke: black;
+    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+}
+
+.output-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.output-section ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.output-section ul li:last-child {
+    border-bottom: none;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Increased width */
+    max-width: 700px; /* Increased max-width */
+    border-radius: 8px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-buttons {
+    margin-bottom: 20px;
+}
+
+.modal-button {
+    background-color: #4CAF50; /* Darker grey */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-button:hover {
+    background-color: #555; /* Slightly darker on hover */
+}
+
+#communication-content {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+#copy-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
