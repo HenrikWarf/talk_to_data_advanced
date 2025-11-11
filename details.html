@@ -70,6 +70,44 @@
 
             let currentContent = [];
 
+            function renderInsights(data) {
+                statusMessage.textContent = ''; // Clear loading message
+
+                if (data.error) {
+                    statusMessage.textContent = `Error: ${data.error}`;
+                } else {
+                    // Populate Insights
+                    if (data.insights && data.insights.length > 0) {
+                        insightsList.innerHTML = ''; // Clear previous results
+                        data.insights.forEach(text => {
+                            const li = document.createElement('li');
+                            li.textContent = text;
+                            insightsList.appendChild(li);
+                        });
+                        insightsContainer.style.display = 'block';
+                    }
+
+                    // Populate Recommendations
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        recommendationsList.innerHTML = ''; // Clear previous results
+                        data.recommendations.forEach(text => {
+                            const li = document.createElement('li');
+                            li.textContent = text;
+                            recommendationsList.appendChild(li);
+                        });
+                        recommendationsContainer.style.display = 'block';
+                    }
+                }
+            }
+
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'cached-data') {
+                    renderInsights(event.data.data);
+                }
+            });
+
+            window.parent.postMessage({ type: 'details-ready' }, '*');
+
             if (!sessionId) {
                 statusMessage.textContent = "Error: No session ID found.";
                 button.disabled = true;
@@ -97,31 +135,8 @@
                     }
 
                     const data = await response.json();
-                    statusMessage.textContent = ''; // Clear loading message
-
-                    if (data.error) {
-                        statusMessage.textContent = `Error: ${data.error}`;
-                    } else {
-                        // Populate Insights
-                        if (data.insights && data.insights.length > 0) {
-                            data.insights.forEach(text => {
-                                const li = document.createElement('li');
-                                li.textContent = text;
-                                insightsList.appendChild(li);
-                            });
-                            insightsContainer.style.display = 'block';
-                        }
-
-                        // Populate Recommendations
-                        if (data.recommendations && data.recommendations.length > 0) {
-                            data.recommendations.forEach(text => {
-                                const li = document.createElement('li');
-                                li.textContent = text;
-                                recommendationsList.appendChild(li);
-                            });
-                            recommendationsContainer.style.display = 'block';
-                        }
-                    }
+                    window.parent.postMessage({ type: 'deepInsightsData', data: data }, '*');
+                    renderInsights(data);
 
                 } catch (error) {
                     statusMessage.textContent = `Error: ${error.message}`;
@@ -178,12 +193,26 @@
             });
 
             copyButton.addEventListener('click', () => {
-                navigator.clipboard.writeText(communicationContent.value).then(() => {
+                try {
+                    communicationContent.select();
+                    // For mobile devices
+                    communicationContent.setSelectionRange(0, 99999); 
+                    
+                    document.execCommand('copy');
+
                     copyConfirmation.style.display = 'inline';
                     setTimeout(() => {
                         copyConfirmation.style.display = 'none';
                     }, 2000);
-                });
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    copyConfirmation.textContent = 'Failed to copy!';
+                    copyConfirmation.style.display = 'inline';
+                     setTimeout(() => {
+                        copyConfirmation.style.display = 'none';
+                        copyConfirmation.textContent = 'Copied!'; // Reset for next time
+                    }, 2000);
+                }
             });
         });
     </script>

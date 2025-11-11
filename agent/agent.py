@@ -19,6 +19,7 @@ from google.adk.sessions import InMemorySessionService
 from google.adk.runners import Runner
 from google.genai import types
 from dotenv import load_dotenv
+from google.adk.errors.not_found_error import NotFoundError
 
 # Import the new insights module
 from . import insights
@@ -79,6 +80,7 @@ template_agent_agent = Agent(
 
         Run these queries in the project-id: ml-developer-project-fe07.
         ALL questions relate to data stored in the customer_data_retail dataset.
+        ALL questions relate to data stored in the customer table.
         """,
     output_schema=DataOutput,
     tools=[bigquery_toolset],
@@ -91,6 +93,7 @@ app = FastAPI()
 
 # In-memory state for storing agent responses
 session_states: Dict[str, DataOutput] = {}
+session_service = InMemorySessionService()
 
 # Add CORS middleware to allow requests from the frontend
 app.add_middleware(
@@ -109,16 +112,25 @@ class AgentResponse(BaseModel):
     session_id: str
     data: DataOutput
 
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 class DeepInsightsRequest(BaseModel):
     session_id: str
 
 @app.post("/run-agent", response_model=AgentResponse)
 async def run_agent_endpoint(request: QueryRequest):
-    session_id = request.session_id if request.session_id and request.session_id in session_states else str(uuid.uuid4())
-    
-    user_id = session_id
-    session_service = InMemorySessionService()
-    session = await session_service.create_session(app_name="template_agent", user_id=user_id)
+    session_id = str(uuid.uuid4())
+    user_id = "default-user"
+    logger.info(f"Creating new session for user_id: {user_id}, session_id: {session_id}")
+
+    await session_service.create_session(
+        app_name="template_agent", user_id=user_id, session_id=session_id
+    )
+
     runner = Runner(
         agent=root_agent,
         app_name="template_agent",
@@ -129,7 +141,7 @@ async def run_agent_endpoint(request: QueryRequest):
     agent_response_object = None
     async for event in runner.run_async(
         user_id=user_id,
-        session_id=session.id,
+        session_id=session_id,
         new_message=content
     ):
         if event.is_final_response():
@@ -137,15 +149,20 @@ async def run_agent_endpoint(request: QueryRequest):
                 if event.content.parts[0].text is not None:
                     try:
                         agent_response_object = DataOutput.model_validate_json(event.content.parts[0].text)
+                        logger.info(f"Agent response for session_id {session_id}: {agent_response_object}")
                     except Exception as e:
-                        agent_response_object = DataOutput(result_text="Error parsing agent response: " + str(e) + "\nRaw response: " + event.content.parts[0].text)
+                        error_message = f"Error parsing agent response: {e}\nRaw response: {event.content.parts[0].text}"
+                        agent_response_object = DataOutput(result_text=error_message)
+                        logger.error(f"Error processing session_id {session_id}: {error_message}")
                 else:
                     agent_response_object = DataOutput(result_text="Error: Agent response content is empty.")
+                    logger.warning(f"Empty response content for session_id {session_id}")
 
     if agent_response_object:
         session_states[session_id] = agent_response_object
         return AgentResponse(session_id=session_id, data=agent_response_object)
     else:
+        logger.error(f"No response from agent for session_id {session_id}")
         return AgentResponse(session_id=session_id, data=DataOutput(result_text="No response from agent."))
 
 @app.post("/deep-insights")

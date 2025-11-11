@@ -1,6 +1,7 @@
 let myChart = null; // Declare myChart globally to destroy existing chart instances
 let loadingInterval; // Declare loadingInterval globally
 let sessionId = null; // Variable to store the session ID
+let deepInsightsData = null; // Variable to store the deep insights data
 
 document.addEventListener('DOMContentLoaded', () => {
     // Ensure a clean state on page load
@@ -50,6 +51,7 @@ document.getElementById('runAgentButton').addEventListener('click', async () => 
         myChart.destroy();
     }
     chartContainer.style.display = 'none';
+    deepInsightsData = null; // Clear deep insights data
     
     // Add 'responded' class to move content to the top
     body.classList.add('responded');
@@ -106,10 +108,16 @@ document.getElementById('toggleViewButton').addEventListener('click', () => {
     body.classList.toggle('side-by-side');
 
     if (body.classList.contains('side-by-side')) {
-        // Pass the session ID to the details page
         detailsFrame.src = `details.html?sessionId=${sessionId}`;
-    } else {
-        detailsFrame.src = 'about:blank';
+    }
+});
+
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'details-ready' && deepInsightsData) {
+        const detailsFrame = document.getElementById('detailsFrame');
+        detailsFrame.contentWindow.postMessage({ type: 'cached-data', data: deepInsightsData }, '*');
+    } else if (event.data.type === 'deepInsightsData') {
+        deepInsightsData = event.data.data;
     }
 });
 
@@ -138,6 +146,7 @@ document.getElementById('clearAllButton').addEventListener('click', () => {
     body.classList.remove('responded', 'side-by-side');
     detailsFrame.src = 'about:blank';
     sessionId = null; // Reset session ID
+    deepInsightsData = null; // Clear deep insights data
 });
 
 function renderTable(tableRows, containerId) {
