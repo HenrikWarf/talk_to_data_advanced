@@ -5,24 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Frontend</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modal.css">
 </head>
 <body>
     <div class="main-content">
         <div class="logo-text">CI</div>
-        <div class="search-container">
-            <input type="text" id="queryInput" placeholder="Enter your query">
-            <button id="runAgentButton">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        <div class="search-wrapper">
+            <div class="search-container">
+                <button id="databaseButton" style="display: flex;" title="Database">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-database"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                </button>
+                <input type="text" id="queryInput" placeholder="Enter your query">
+                <button id="runAgentButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+                <button id="clearAllButton" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                </button>
+            </div>
+            <div id="databaseSchemaContainer">
+                <span class="column-name">customer_id</span>
+                <span class="column-name">age</span>
+                <span class="column-name">gender</span>
+                <span class="column-name">location</span>
+                <span class="column-name">registration_date</span>
+                <span class="column-name">acquisition_source</span>
+                <span class="column-name">first_purchase_date</span>
+                <span class="column-name">date_of_last_purchase</span>
+                <span class="column-name">total_number_of_orders</span>
+                <span class="column-name">average_order_value</span>
+                <span class="column-name">total_spent_ltv</span>
+                <span class="column-name">purchase_frequency</span>
+                <span class="column-name">average_items_per_order</span>
+                <span class="column-name">primary_shopping_channel</span>
+                <span class="column-name">discount_affinity</span>
+                <span class="column-name">preferred_categories</span>
+                <span class="column-name">style_preference</span>
+                <span class="column-name">size_general</span>
+                <span class="column-name">shoe_size</span>
+                <span class="column-name">return_rate_percent</span>
+            </div>
+            <button id="suggestionButton" title="Generate Suggestions">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
             </button>
-            <button id="clearAllButton" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-            </button>
+            <div id="suggestionContainer"></div>
         </div>
         <div class="response-header-container">
-            <h2 id="responseHeader" style="display: none;">Agent Response:</h2>
-            <button id="toggleViewButton" style="display: none;" title="Gain Deep Insights">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </button>
+            <h2 id="responseHeader" style="display: none;"></h2>
+            <div class="button-group">
+                <div id="followUpContainer" style="display: none;">
+                    <input type="text" id="followUpInput" placeholder="Ask a follow-up question...">
+                    <button id="submitFollowUpButton">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+                <button id="followUpButton" style="display: none;" title="Follow Up">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-down-right"><polyline points="15 10 20 15 15 20"></polyline><path d="M4 4v7a4 4 0 0 0 4 4h12"></path></svg>
+                </button>
+                <button id="toggleViewButton" style="display: none;" title="Gain Deep Insights">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </button>
+            </div>
         </div>
         <pre id="responseContainer"></pre>
 
@@ -35,8 +78,34 @@
         <iframe id="detailsFrame" src="about:blank"></iframe>
     </div>
 
+    <div id="suggestionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Query Suggestions</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-header-button">
+                <button id="generateSuggestionsModalButton" title="Generate Suggestions">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                </button>
+                <p>Generate Suggestions</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-categories">
+                    <h3>Categories</h3>
+                    <ul id="categoryList"></ul>
+                </div>
+                <div class="modal-suggestions">
+                    <h3>Suggestions</h3>
+                    <div id="suggestionList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
+    <script src="modal.js"></script>
  
 </body>
 </html>

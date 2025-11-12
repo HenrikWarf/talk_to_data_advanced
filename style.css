@@ -79,6 +79,8 @@ body.responded .logo-text {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    justify-content: center;
+    gap: 10px;
 }
 
 #queryInput {
@@ -95,7 +97,7 @@ body.responded .logo-text {
     border-color: rgba(223,225,229,0);
 }
 
-#runAgentButton, #toggleViewButton, #clearAllButton {
+#runAgentButton, #toggleViewButton, #clearAllButton, #followUpButton, #submitFollowUpButton, #databaseButton, #suggestionButton {
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
     border-radius: 50%;
@@ -110,17 +112,101 @@ body.responded .logo-text {
     padding: 0;
 }
 
-#runAgentButton:hover, #toggleViewButton:hover, #clearAllButton:hover {
+#runAgentButton:hover, #toggleViewButton:hover, #clearAllButton:hover, #followUpButton:hover, #submitFollowUpButton:hover, #databaseButton:hover, #suggestionButton:hover {
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     background-color: #f8f9fa;
     border: 1px solid #dadce0;
     color: #202124;
 }
 
-#runAgentButton svg, #toggleViewButton svg, #clearAllButton svg {
+#runAgentButton svg, #toggleViewButton svg, #clearAllButton svg, #followUpButton svg, #submitFollowUpButton svg, #databaseButton svg, #suggestionButton svg {
     width: 24px;
     height: 24px;
     stroke: #3c4043;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#databaseSchemaContainer {
+    display: none; /* Hidden by default */
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 15px;
+    max-width: 600px;
+    position: absolute;
+    top: 120px; /* Position it below the search bar */
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.column-name {
+    background-color: #f0f0f0;
+    color: #3c4043;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-family: 'Google Sans', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.column-name:hover {
+    background-color: #e0e0e0;
+}
+
+#suggestionContainer {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 15px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.suggestion-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dadce0;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.suggestion-item:hover {
+    background-color: #f1f3f4;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.suggestion-category {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    align-self: flex-start;
+}
+
+.suggestion-text {
+    color: #3c4043;
+}
+
+.category-purchase-behaviour,
+.category-customer-segmentation,
+.category-time-based-analysis {
+    background-color: #f0f0f0;
+    color: #3c4043;
 }
 
 #responseContainer {
@@ -143,6 +229,20 @@ body.responded .logo-text {
 #responseHeader {
     margin-top: 20px;
     margin-right: auto;
+}
+
+#followUpContainer {
+    display: flex;
+    align-items: center;
+}
+
+#followUpInput {
+    width: 500px;
+    padding: 10px 20px;
+    border: 1px solid #dfe1e5;
+    border-radius: 24px;
+    font-size: 16px;
+    outline: none;
 }
 
 table {
@@ -168,4 +268,44 @@ th {
     width: 100%;
     margin-top: 20px;
     display: none;
+}
+
+.button-group {
+    display: flex;
+}
+
+.out-of-focus {
+    background-color: #f0f0f0 !important;
+    border-color: #e0e0e0 !important;
+    color: #aaa !important;
+}
+
+.out-of-focus svg {
+    stroke: #aaa !important;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+}
+
+#suggestionButton.loading svg {
+    display: none;
+}
+
+#suggestionButton.loading .loading-spinner {
+    display: block;
 }

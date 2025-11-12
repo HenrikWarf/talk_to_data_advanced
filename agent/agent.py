@@ -25,6 +25,7 @@ from google.adk.errors.not_found_error import NotFoundError
 from . import insights
 from . import communications
 from .communications import CommunicationContentRequest, CommunicationContentResponse
+from . import suggestions
 
 # Load environment variables (required for API keys)
 load_dotenv()
@@ -63,7 +64,7 @@ class DataOutput(BaseModel):
 # Define the agent
 template_agent_agent = Agent(
     name="template_agent",
-    model="gemini-2.5-flash",
+    model="gemini-2.5-pro",
     description="Agent to answer questions about BigQuery data and models and executeSQL queries.",
     instruction="""
         You are a data analytics agent and BigQuery Expert with access to several BigQuery tools.
@@ -120,6 +121,10 @@ logger = logging.getLogger(__name__)
 
 class DeepInsightsRequest(BaseModel):
     session_id: str
+
+class SuggestionRequest(BaseModel):
+    schema: str
+    category: Optional[str] = None
 
 @app.post("/run-agent", response_model=AgentResponse)
 async def run_agent_endpoint(request: QueryRequest):
@@ -187,3 +192,12 @@ async def generate_communication_endpoint(request: CommunicationContentRequest):
         return communications.generate_communication_content(request)
     except Exception as e:
         return {"error": f"Failed to generate communication content: {str(e)}"}
+
+@app.post("/generate-suggestions")
+async def get_suggestions(request: SuggestionRequest):
+    try:
+        suggestion_list = suggestions.generate_suggestions(request.schema, request.category)
+        return {"suggestions": suggestion_list}
+    except Exception as e:
+        logger.error(f"Error generating suggestions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
