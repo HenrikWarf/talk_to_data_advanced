@@ -1,6 +1,6 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f5f7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -11,63 +11,57 @@ body {
 .deep-insights-container {
     text-align: center;
     padding: 40px;
+    max-width: 800px;
+    margin: auto;
 }
 
-/* Styling for the new large icon button */
 .large-icon-button {
-    background-color: #f8f9fa;
-    border: 1px solid #f8f9fa;
+    background-color: #ffffff;
+    border: 1px solid #dfe1e5;
     border-radius: 50%;
-    color: #3c4043;
+    color: #172b4d;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 70px; /* Larger size */
-    width: 70px;  /* Larger size */
-    margin: 20px auto; /* Centered with some margin */
+    height: 70px;
+    width: 70px;
+    margin: 20px auto;
     padding: 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s, background-color 0.3s, border-color 0.3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
 .large-icon-button:hover {
-    box-shadow: 0 1px 6px rgba(32,33,36,0.28);
-    background-color: #ebebeb;
-    border-color: #dadce0;
-    color: #202124;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background-color: #f4f5f7;
 }
 
 .large-icon-button svg {
-    width: 32px; /* Adjust icon size for larger button */
+    width: 32px;
     height: 32px;
-    stroke: #3c4043;
+    stroke: #42526e;
 }
 
 .output-section {
     margin-top: 30px;
     text-align: left;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .output-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #eee;
     padding-bottom: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dfe1e5;
 }
 
 .output-section h2 {
-    margin-top: 0;
+    margin: 0;
     font-size: 20px;
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
+    font-weight: 600;
+    color: #172b4d;
 }
 
 .share-button {
@@ -80,27 +74,41 @@ body {
 .share-button svg {
     width: 20px;
     height: 20px;
-    stroke: #666;
-    transition: stroke 0.3s ease, filter 0.3s ease;
+    stroke: #6b778c;
+    transition: stroke 0.3s ease;
 }
 
 .share-button:hover svg {
-    stroke: black;
-    filter: drop-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+    stroke: #172b4d;
 }
 
-.output-section ul {
-    list-style-type: none;
-    padding-left: 0;
+.card {
+    background-color: #ffffff;
+    border: 1px solid #dfe1e5;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: flex-start; /* Changed to flex-start for text alignment */
+    text-align: left;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.output-section ul li {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+.card:hover {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    border-color: #c1c7d0;
+    background-color: #f9f9f9;
 }
 
-.output-section ul li:last-child {
-    border-bottom: none;
+/* Removed .card-icon and related styles */
+
+.card-content {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #172b4d;
+    font-weight: 500;
+    /* Removed padding as it's now handled by card padding */
 }
 
 /* Modal styles */
@@ -128,8 +136,8 @@ body {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%; /* Increased width */
-    max-width: 700px; /* Increased max-width */
+    width: 90%;
+    max-width: 700px;
     border-radius: 8px;
 }
 
