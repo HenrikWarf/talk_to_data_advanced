@@ -74,23 +74,56 @@ document.addEventListener('DOMContentLoaded', () => {
             const suggestionItem = document.createElement('div');
             suggestionItem.classList.add('suggestion-item');
 
+            const header = document.createElement('div');
+            header.classList.add('suggestion-category-header');
+
             const categoryElement = document.createElement('div');
             categoryElement.classList.add('suggestion-category');
             categoryElement.textContent = suggestion.category;
-            categoryElement.classList.add(`category-${suggestion.category.toLowerCase().replace(/\s+/g, '-')}`);
+
+            const editButton = document.createElement('button');
+            editButton.classList.add('edit-suggestion-button');
+            editButton.innerHTML = '&#9998;'; // Pencil icon
+
+            header.appendChild(categoryElement);
+            header.appendChild(editButton);
 
             const textElement = document.createElement('div');
             textElement.classList.add('suggestion-text');
             textElement.textContent = suggestion.suggestion;
 
-            suggestionItem.appendChild(categoryElement);
-            suggestionItem.appendChild(textElement);
+            const textarea = document.createElement('textarea');
+            textarea.classList.add('edit-suggestion-textarea');
+            textarea.value = suggestion.suggestion;
+            textarea.rows = 3;
 
-            suggestionItem.addEventListener('click', () => {
-                document.getElementById('queryInput').value = suggestion.suggestion;
-                askAgent(suggestion.suggestion);
+            const executeButton = document.createElement('button');
+            executeButton.classList.add('execute-suggestion-button');
+            executeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+
+            suggestionItem.appendChild(header);
+            suggestionItem.appendChild(textElement);
+            suggestionItem.appendChild(textarea);
+            suggestionItem.appendChild(executeButton);
+
+            editButton.addEventListener('click', () => {
+                const isEditing = textElement.style.display === 'none';
+                textElement.style.display = isEditing ? 'block' : 'none';
+                textarea.style.display = isEditing ? 'none' : 'block';
+                editButton.innerHTML = isEditing ? '&#9998;' : 'Save';
+                if (isEditing) {
+                    // Save the changes
+                    textElement.textContent = textarea.value;
+                }
+            });
+
+            executeButton.addEventListener('click', () => {
+                const query = textarea.style.display === 'none' ? textElement.textContent : textarea.value;
+                document.getElementById('queryInput').value = query;
+                askAgent(query);
                 closeModal();
             });
+
             suggestionList.appendChild(suggestionItem);
         });
     }

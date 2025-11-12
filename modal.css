@@ -129,6 +129,64 @@
 
 .suggestion-item {
     margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.suggestion-category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.suggestion-category {
+    background-color: white;
+    border: 1px solid #666;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.edit-suggestion-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-suggestion-textarea {
+    width: 100%;
+    height: 80px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.execute-suggestion-button {
+    display: block;
+    margin-left: auto;
+    padding: 5px;
+    border: none;
+    background-color: transparent;
+    color: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.execute-suggestion-button:hover {
+    background-color: #e0e0e0;
+}
+
+.execute-suggestion-button svg {
+    width: 20px;
+    height: 20px;
+    fill: black;
 }
 
 @keyframes spinner-small {
