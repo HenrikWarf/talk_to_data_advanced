@@ -7,6 +7,8 @@ The project consists of:
 - An `agent` directory with the core `agent.py` file defining the FastAPI application and the Gemini agent.
 - A `venv` for managing Python dependencies.
 - A web frontend (`index.html`, `script.js`, `style.css`) to interact with the backend agent, featuring dynamic layout and data visualization.
+- A suggestion modal (`modal.html`, `modal.css`, `modal.js`) that provides query suggestions, allows for editing, and executes the queries.
+- A details view (`details.html`, `details.css`) for displaying deep insights.
 
 ## Technologies Used
 
@@ -89,3 +91,8 @@ Several enhancements were made to the frontend layout to improve user experience
 *   **Side-by-Side View:** A "Toggle View" button was added, which, when clicked, splits the screen into two halves. The agent's response occupies the left 50%, and a new `details.html` page is loaded into an `iframe` on the right 50%. This is managed by toggling a `side-by-side` class on the `body` element, which changes the flex direction to `row` and adjusts widths.
 *   **Clear All Functionality:** A "Clear All" button was implemented to reset the UI to its initial centered state, clearing all displayed responses, charts, and tables, and hiding the action buttons.
 *   **Separation of Concerns:** `details.html` now has its own `details.css` to ensure independent styling and prevent conflicts with the main application's layout.
+*   **Database Schema Display:** A button to toggle the visibility of the database schema is available. When displayed, it has a background and border to ensure it is readable over other elements.
+*   **Suggestion Modal:** A modal for query suggestions has been implemented.
+    *   **Categorized Suggestions:** Suggestions are grouped by category for easier navigation.
+    *   **Editable Queries:** Users can edit the suggested queries in a text area before execution.
+    *   **Direct Execution:** An execute button (play icon) allows for running the query directly from the modal.
